@@ -8,18 +8,18 @@ def Main():
     
     random_seconds = randint(30, 120)
     now = datetime.now() - timedelta(seconds=random_seconds)
-    current_time = now.strftime("%H:%M:%S")
+    t0 = now.strftime("%H:%M:%S")
     
     print("Segundos descontados para gerar atraso: ", random_seconds)
-    print("Horário setado no cliente: ", current_time)
+    print("Horário setado no cliente (T0): ", t0)
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     dest = (host, port) 
 
-    client_socket.settimeout(5)
+    client_socket.settimeout(20)
     client_socket.connect(dest)
 
-    client_socket.send(current_time.encode('ascii'))
+    client_socket.send(t0.encode('ascii'))
 
     try:
         resposta, servidor = client_socket.recvfrom(1024)
@@ -30,4 +30,4 @@ def Main():
     client_socket.close() #Fecha a conexão com o servidor
 
 if __name__ == '__main__': 
-	Main()
+    Main()

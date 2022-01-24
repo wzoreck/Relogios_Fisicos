@@ -1,13 +1,31 @@
-import socket 
-import threading 
+import socket
+import threading
+from time import sleep
+from random import randint
+from datetime import datetime
    
 def workerThread(s):
     while True: 
-        client_time = s.recv(1024)
-        if not client_time: break
-        print('O cliente enviou: ', client_time.decode())
+        t0 = s.recv(1024)
+        
+        now = datetime.now()
+        t1 = now.strftime("%H:%M:%S")
+        
+        t0 = t0.decode()
+        if not t0: break
+        print('O cliente enviou: ', t0)
+        
+        sleep(randint(5, 10))
+        
+        now = datetime.now()
+        t2 = now.strftime("%H:%M:%S")
+        
+        print(f'T0: {t0} T1: {t1} T2: {t2}')
+        
+        times = f'{t0}, {t1}, {t2}'
+        
         try:
-           s.send(client_time)
+            s.send(times.encode('ascii'))
         except:
             print('Erro ao responder.')
     s.close() 
@@ -24,7 +42,7 @@ def Main():
 
     while True: 
         s, addr = server_socket.accept() 
-        print('Cliente Conectado:', addr[0], ':', addr[1])  
+        print('\nCliente Conectado:', addr[0], ':', addr[1])  
         tw = threading.Thread(target=workerThread, args=[s])
         tw.start()
 
