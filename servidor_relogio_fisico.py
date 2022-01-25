@@ -4,9 +4,9 @@ from time import sleep
 from random import randint
 from datetime import datetime
    
-def workerThread(s):
+def workerThread(socket):
     while True: 
-        t0 = s.recv(1024)
+        t0 = socket.recv(1024)
         
         now = datetime.now()
         t1 = now.strftime("%H:%M:%S")
@@ -22,26 +22,26 @@ def workerThread(s):
         
         print(f'T0: {t0} T1: {t1} T2: {t2}')
         
-        times = f'{t0}, {t1}, {t2}'
+        horarios = f'{t0}, {t1}, {t2}'
         
         try:
-            s.send(times.encode('ascii'))
+            socket.send(horarios.encode('ascii'))
         except:
             print('Erro ao responder.')
-    s.close() 
+    socket.close() 
   
 def Main(): 
     host = "" 
-    port = 2802
+    porta = 2802
 
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-    server_socket.bind((host, port)) 
-    server_socket.listen() 
+    servidor_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+    servidor_socket.bind((host, porta)) 
+    servidor_socket.listen() 
   
-    print("Servidor inicializado na porta " + str(port))
+    print("Servidor inicializado na porta " + str(porta))
 
     while True: 
-        s, addr = server_socket.accept() 
+        s, addr = servidor_socket.accept() 
         print('\nCliente Conectado:', addr[0], ':', addr[1])  
         tw = threading.Thread(target=workerThread, args=[s])
         tw.start()
